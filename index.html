@@ -1496,7 +1496,7 @@ async function loadNotionData(){
   const lbl=document.getElementById('refreshLabel');
   const dot=document.getElementById('syncDot');
   const syncLbl=document.getElementById('syncLabel');
-  btn.classList.add('loading');lbl.textContent='Syncing...';dot.className='sync-dot stale';syncLbl.textContent='Syncing...';
+  try{btn.classList.add('loading');lbl.textContent='Syncing...';dot.className='sync-dot stale';syncLbl.textContent='Syncing...';}catch(e){}
 
   // Load publisher scorecards from Notion via Claude API
   try{
@@ -1538,12 +1538,14 @@ async function loadNotionData(){
     if(m){ const recs = JSON.parse(m[0]); if(recs) renderReporting({reportingEntries: recs}); }
   }catch(e){console.log('Joanie Reporting unavailable',e);}
 
-  const now=new Date();
-  dot.className='sync-dot';
-  syncLbl.textContent='Synced '+now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-  btn.classList.remove('loading');
-  lbl.textContent='Sync Notion';
-  resetCountdown();
+  try{
+    const now=new Date();
+    dot.className='sync-dot';
+    syncLbl.textContent='Synced '+now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    btn.classList.remove('loading');
+    lbl.textContent='Sync Notion';
+    resetCountdown();
+  }catch(e){}
 }
 
 /* ── AUTO-REFRESH COUNTDOWN ──────────────────────────────────────── */
@@ -1562,24 +1564,25 @@ function resetCountdown(){
 
 /* ── INIT ────────────────────────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded',()=>{
-  buildRevChart();
-  buildRoutePie();
-  buildCallVolChart('callVolChart');
-  buildFunnel('funnelEl');
-  buildCpaChart();
-  buildClientTable();
-  buildRpcChart();
-  buildOverflowChart();
-  buildMarginChart();
-  buildAgents();
-  buildCallVolChart('callVolChart2');
-  buildFunnel('funnelEl2');
-  renderRPTab();
-  renderSubIDTab();
-  renderDispositionsTab();
-  renderAlerts();
-  renderTrendCharts([]);
-  loadNotionData();
+  try { buildRevChart(); } catch(e) { console.log('revChart',e); }
+  try { buildRoutePie(); } catch(e) { console.log('routePie',e); }
+  try { buildCallVolChart('callVolChart'); } catch(e) { console.log('callVol',e); }
+  try { buildFunnel('funnelEl'); } catch(e) { console.log('funnel',e); }
+  try { buildCpaChart(); } catch(e) { console.log('cpa',e); }
+  try { buildClientTable(); } catch(e) { console.log('client',e); }
+  try { buildRpcChart(); } catch(e) { console.log('rpc',e); }
+  try { buildOverflowChart(); } catch(e) { console.log('overflow',e); }
+  try { buildMarginChart(); } catch(e) { console.log('margin',e); }
+  try { buildAgents(); } catch(e) { console.log('agents',e); }
+  try { buildCallVolChart('callVolChart2'); } catch(e) { console.log('callVol2',e); }
+  try { buildFunnel('funnelEl2'); } catch(e) { console.log('funnel2',e); }
+  try { renderRPTab(); } catch(e) { console.log('rp',e); }
+  try { renderSubIDTab(); } catch(e) { console.log('subid',e); }
+  try { renderDispositionsTab(); } catch(e) { console.log('disp',e); }
+  try { renderAlerts(); } catch(e) { console.log('alerts',e); }
+  try { renderTrendCharts([]); } catch(e) { console.log('trends',e); }
+  try { renderCards(FALLBACK); renderDist(FALLBACK); } catch(e) { console.log('fallback',e); }
+  loadNotionData().catch(e => console.log('notion',e));
 });
 </script>
 <!-- EXEC SNAPSHOT OVERLAY -->
